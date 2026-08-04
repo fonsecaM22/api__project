@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Finder</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/293aa5b3ae.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <header>
+        <h1>🎬 Movie Finder</h1>
+        <p>Search for your favorite movies.</p>
+    </header>
+
+    <main>
+
+        <!-- Search Section -->
+        <section class="search-section">
+
+            <input
+                type="text"
+                id="movieInput"
+                placeholder="Search for a movie..."
+            >
+
+            <button id="searchBtn">
+                <span class="btn-label">Search</span>
+                <i class="fa-solid fa-spinner"></i>
+            </button>
+
+        </section>
+
+        <!-- Movie Card -->
+        <section id="movieContainer">
+
+            <div class="movie-card">
+
+                <img
+                    id="moviePoster"
+                    src="https://placehold.co/300x450?text=Movie+Poster"
+                    alt="Movie Poster"
+                >
+
+                <div class="movie-info">
+
+                    <h2 id="movieTitle">Movie Title</h2>
+
+                    <p><strong>Year:</strong> <span id="movieYear">----</span></p>
+
+                    <p><strong>Rating:</strong> ⭐ <span id="movieRating">----</span></p>
+
+                    <p><strong>Genre:</strong> <span id="movieGenre">----</span></p>
+
+                    <p><strong>Runtime:</strong> <span id="movieRuntime">----</span></p>
+
+                    <p><strong>Director:</strong> <span id="movieDirector">----</span></p>
+
+                    <p><strong>Actors:</strong> <span id="movieActors">----</span></p>
+
+                    <h3>Plot</h3>
+
+                    <p id="moviePlot">
+                        Search for a movie to see its description.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
