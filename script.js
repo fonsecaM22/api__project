@@ -11,6 +11,8 @@ const movieRuntime = document.getElementById('movieRuntime');
 const movieDirector = document.getElementById('movieDirector');
 const movieActors = document.getElementById('movieActors');
 const moviePlot = document.getElementById('moviePlot');
+const typeFilter = document.getElementById('typeFilter');
+const yearFilter = document.getElementById('yearFilter');
 
 const apiKey = '2739fb64';
 
@@ -21,14 +23,25 @@ async function searchMovie() {
         return;
     }
 
+    const type = typeFilter.value; // '', 'movie', 'series', 'episode'
+    const year = yearFilter.value.trim();
+
+    // Validate year if provided
+    if (year && !/^\d{4}$/.test(year)) {
+        alert("Please enter a valid 4-digit year.");
+        return;
+    }
+
     searchBtn.disabled = true;
     searchBtn.classList.add('loading');
     movieInput.disabled = true;
     resultsList.innerHTML = '';
 
     try {
-        // s= returns a list of matches (10 per page) instead of one exact match
-        const url = `https://www.omdbapi.com/?s=${encodeURIComponent(movieName)}&apikey=${apiKey}`;
+        let url = `https://www.omdbapi.com/?s=${encodeURIComponent(movieName)}&apikey=${apiKey}`;
+        if (type) url += `&type=${type}`;
+        if (year) url += `&y=${year}`;
+
         const response = await fetch(url);
         const data = await response.json();
 
@@ -53,10 +66,16 @@ function renderResults(movies) {
     movies.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'result-card';
-        card.innerHTML = `
-            <img src="${movie.Poster !== "N/A" ? movie.Poster : ''}" alt="${movie.Title}" />
-            <p>${movie.Title} (${movie.Year})</p>
-        `;
+
+        const img = document.createElement('img');
+        img.src = movie.Poster !== "N/A" ? movie.Poster : '';
+        img.alt = movie.Title;
+
+        const info = document.createElement('p');
+        info.textContent = `${movie.Title} (${movie.Year}) — ${movie.Type}`;
+
+        card.appendChild(img);
+        card.appendChild(info);
         card.addEventListener('click', () => loadDetails(movie.imdbID));
         resultsList.appendChild(card);
     });

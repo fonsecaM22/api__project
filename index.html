@@ -33,6 +33,17 @@
 
     </section>
 
+    <div class="filters">
+  <select id="typeFilter">
+    <option value="">All Types</option>
+    <option value="movie">Movie</option>
+    <option value="series">Series</option>
+    <option value="episode">Episode</option>
+  </select>
+
+  <input type="number" id="yearFilter" placeholder="Year (e.g. 2015)" min="1888" max="2100" />
+</div>
+
     <!-- Search Results -->
     <div id="movieResults" class="results-grid"></div>
 
