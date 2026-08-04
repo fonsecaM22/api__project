@@ -1,6 +1,6 @@
 const movieInput = document.getElementById('movieInput');
 const searchBtn = document.getElementById('searchBtn');
-const resultsList = document.getElementById('movieResults'); // new container, see HTML below
+const resultsList = document.getElementById('movieResults');
 
 const moviePoster = document.getElementById('moviePoster');
 const movieTitle = document.getElementById('movieTitle');
@@ -13,8 +13,11 @@ const movieActors = document.getElementById('movieActors');
 const moviePlot = document.getElementById('moviePlot');
 const typeFilter = document.getElementById('typeFilter');
 const yearFilter = document.getElementById('yearFilter');
+const sortFilter = document.getElementById('sortFilter');
 
 const apiKey = '2739fb64';
+
+let lastResults = [];
 
 async function searchMovie() {
     const movieName = movieInput.value.trim();
@@ -62,8 +65,11 @@ async function searchMovie() {
 }
 
 function renderResults(movies) {
+    lastResults = movies;
+    const sorted = sortMovies(movies, sortFilter.value);
+
     resultsList.innerHTML = '';
-    movies.forEach(movie => {
+    sorted.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'result-card';
 
@@ -108,10 +114,43 @@ async function loadDetails(imdbID) {
     }
 }
 
+function parseYear(yearStr) {
+    // OMDb sometimes returns "2010–2015" for series; grab just the first year
+    return parseInt(yearStr.slice(0, 4), 10) || 0;
+}
+
+function sortMovies(movies, sortValue) {
+    const sorted = [...movies]; // don't mutate the original array
+
+    switch (sortValue) {
+        case 'az':
+            sorted.sort((a, b) => a.Title.localeCompare(b.Title));
+            break;
+        case 'za':
+            sorted.sort((a, b) => b.Title.localeCompare(a.Title));
+            break;
+        case 'newest':
+            sorted.sort((a, b) => parseYear(b.Year) - parseYear(a.Year));
+            break;
+        case 'oldest':
+            sorted.sort((a, b) => parseYear(a.Year) - parseYear(b.Year));
+            break;
+        // default: leave in original (relevance) order
+    }
+
+    return sorted;
+}
+
 searchBtn.addEventListener('click', searchMovie);
 
 movieInput.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
         searchMovie();
+    }
+});
+
+sortFilter.addEventListener('change', () => {
+    if (lastResults.length) {
+        renderResults(lastResults);
     }
 });
