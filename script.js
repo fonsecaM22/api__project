@@ -1,5 +1,6 @@
 const movieInput = document.getElementById('movieInput');
 const searchBtn = document.getElementById('searchBtn');
+const resultsList = document.getElementById('movieResults'); // new container, see HTML below
 
 const moviePoster = document.getElementById('moviePoster');
 const movieTitle = document.getElementById('movieTitle');
@@ -11,55 +12,87 @@ const movieDirector = document.getElementById('movieDirector');
 const movieActors = document.getElementById('movieActors');
 const moviePlot = document.getElementById('moviePlot');
 
-
-
 const apiKey = '2739fb64';
 
 async function searchMovie() {
-  const movieName = movieInput.value.trim();
-  if (!movieName) {
-    alert("Please enter a movie name!");
-    return;
-  }
-
-  searchBtn.disabled = true;
-  searchBtn.classList.add('loading');
-
-  try {
-    const url = `https://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${apiKey}`;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.Response === "False") {
-      alert(data.Error || "Movie not found!");
-      return;
+    const movieName = movieInput.value.trim();
+    if (!movieName) {
+        alert("Please enter a movie name!");
+        return;
     }
 
-    moviePoster.src = data.Poster !== "N/A" ? data.Poster : "";
-    movieTitle.textContent = data.Title;
-    movieYear.textContent = data.Year;
-    movieRating.textContent = data.imdbRating;
-    movieGenre.textContent = data.Genre;
-    movieRuntime.textContent = data.Runtime;
-    movieDirector.textContent = data.Director;
-    movieActors.textContent = data.Actors;
-    moviePlot.textContent = data.Plot;
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong. Please try again.");
-  } finally {
-    searchBtn.disabled = false;
-    searchBtn.classList.remove('loading');
-    spinner.hidden = true;
-    movieInput.disabled = false;
-  }
+    searchBtn.disabled = true;
+    searchBtn.classList.add('loading');
+    movieInput.disabled = true;
+    resultsList.innerHTML = '';
+
+    try {
+        // s= returns a list of matches (10 per page) instead of one exact match
+        const url = `https://www.omdbapi.com/?s=${encodeURIComponent(movieName)}&apikey=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.Response === "False") {
+            alert(data.Error || "Movie not found!");
+            return;
+        }
+
+        renderResults(data.Search);
+    } catch (err) {
+        console.error(err);
+        alert("Something went wrong. Please try again.");
+    } finally {
+        searchBtn.disabled = false;
+        searchBtn.classList.remove('loading');
+        movieInput.disabled = false;
+    }
+}
+
+function renderResults(movies) {
+    resultsList.innerHTML = '';
+    movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+            <img src="${movie.Poster !== "N/A" ? movie.Poster : ''}" alt="${movie.Title}" />
+            <p>${movie.Title} (${movie.Year})</p>
+        `;
+        card.addEventListener('click', () => loadDetails(movie.imdbID));
+        resultsList.appendChild(card);
+    });
+}
+
+async function loadDetails(imdbID) {
+    try {
+        // i= fetches full details for the specific movie by IMDb ID
+        const url = `https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.Response === "False") {
+            alert(data.Error || "Could not load details!");
+            return;
+        }
+
+        moviePoster.src = data.Poster !== "N/A" ? data.Poster : "";
+        movieTitle.textContent = data.Title;
+        movieYear.textContent = data.Year;
+        movieRating.textContent = data.imdbRating;
+        movieGenre.textContent = data.Genre;
+        movieRuntime.textContent = data.Runtime;
+        movieDirector.textContent = data.Director;
+        movieActors.textContent = data.Actors;
+        moviePlot.textContent = data.Plot;
+    } catch (err) {
+        console.error(err);
+        alert("Something went wrong loading details.");
+    }
 }
 
 searchBtn.addEventListener('click', searchMovie);
 
 movieInput.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') {
-    searchMovie();
-  }
+    if (e.key === 'Enter') {
+        searchMovie();
+    }
 });
-

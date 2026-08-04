@@ -17,62 +17,65 @@
 
     <main>
 
-        <!-- Search Section -->
-        <section class="search-section">
+    <!-- Search Section -->
+    <section class="search-section">
 
-            <input
-                type="text"
-                id="movieInput"
-                placeholder="Search for a movie..."
+        <input
+            type="text"
+            id="movieInput"
+            placeholder="Search for a movie..."
+        >
+
+        <button id="searchBtn">
+            <span class="btn-label">Search</span>
+            <i class="fa-solid fa-spinner"></i>
+        </button>
+
+    </section>
+
+    <!-- Search Results -->
+    <div id="movieResults" class="results-grid"></div>
+
+    <!-- Movie Card -->
+    <section id="movieContainer">
+
+        <div class="movie-card">
+
+            <img
+                id="moviePoster"
+                src="https://placehold.co/300x450?text=Movie+Poster"
+                alt="Movie Poster"
             >
 
-            <button id="searchBtn">
-                <span class="btn-label">Search</span>
-                <i class="fa-solid fa-spinner"></i>
-            </button>
+            <div class="movie-info">
 
-        </section>
+                <h2 id="movieTitle">Movie Title</h2>
 
-        <!-- Movie Card -->
-        <section id="movieContainer">
+                <p><strong>Year:</strong> <span id="movieYear">----</span></p>
 
-            <div class="movie-card">
+                <p><strong>Rating:</strong> ⭐ <span id="movieRating">----</span></p>
 
-                <img
-                    id="moviePoster"
-                    src="https://placehold.co/300x450?text=Movie+Poster"
-                    alt="Movie Poster"
-                >
+                <p><strong>Genre:</strong> <span id="movieGenre">----</span></p>
 
-                <div class="movie-info">
+                <p><strong>Runtime:</strong> <span id="movieRuntime">----</span></p>
 
-                    <h2 id="movieTitle">Movie Title</h2>
+                <p><strong>Director:</strong> <span id="movieDirector">----</span></p>
 
-                    <p><strong>Year:</strong> <span id="movieYear">----</span></p>
+                <p><strong>Actors:</strong> <span id="movieActors">----</span></p>
 
-                    <p><strong>Rating:</strong> ⭐ <span id="movieRating">----</span></p>
+                <h3>Plot</h3>
 
-                    <p><strong>Genre:</strong> <span id="movieGenre">----</span></p>
-
-                    <p><strong>Runtime:</strong> <span id="movieRuntime">----</span></p>
-
-                    <p><strong>Director:</strong> <span id="movieDirector">----</span></p>
-
-                    <p><strong>Actors:</strong> <span id="movieActors">----</span></p>
-
-                    <h3>Plot</h3>
-
-                    <p id="moviePlot">
-                        Search for a movie to see its description.
-                    </p>
-
-                </div>
+                <p id="moviePlot">
+                    Search for a movie to see its description.
+                </p>
 
             </div>
 
-        </section>
+        </div>
 
-    </main>
+    </section>
+
+</main>
 
     <script src="script.js"></script>
 
